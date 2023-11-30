@@ -1,26 +1,58 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+import RootLayout from "./pages/RootLayout";
+import RecipePage from "./pages/RecipePage";
+import HomePage from "./pages/HomePage";
+import SignUpPage from "./pages/SignUpPage";
+import LoginPage from "./pages/LoginPage";
+import BookmarksPage from "./pages/BookmarksPage";
+import BookmarkedRecipePage from "./pages/BookmarkedRecipePage";
+import MyAccountPage from "./pages/MyAccountPage";
+import PostFormPage from "./pages/PostFormPage";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <RootLayout />,
+    children: [
+      {
+        path: "/",
+        element: <HomePage />,
+      },
+      {
+        path: "/signup",
+        element: <SignUpPage />,
+      },
+      {
+        path: "/login",
+        element: <LoginPage />,
+      },
+      {
+        path: "/recipe",
+        element: <RecipePage />,
+      },
+      {
+        path: "/bookmarks",
+        element: <BookmarksPage />,
+      },
+      {
+        path: "/bookmarked-recipe",
+        element: <BookmarkedRecipePage />,
+      },
+      {
+        path: "/my-account",
+        element: <MyAccountPage />,
+      },
+      {
+        path: "/post-form",
+        element: <PostFormPage />,
+      },
+    ],
+  },
+]);
+
+const App = (): JSX.Element => {
+  return <RouterProvider router={router} />;
+};
 
 export default App;

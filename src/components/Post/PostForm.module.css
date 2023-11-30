@@ -1,0 +1,294 @@
+.post {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: auto;
+  width: 100vw;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.post .post-container {
+  width: 100%;
+  padding: 1rem 5rem;
+  margin-top: 4.5rem;
+  margin-bottom: 1rem;
+}
+
+.post-container .heading {
+  font-size: 2rem;
+}
+
+.post-container .fields {
+  display: grid;
+  grid-gap: 2rem;
+}
+
+.fields .section .field .label {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.fields .section .align {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 0rem;
+}
+
+.fields .section .align .label {
+  width: 40px;
+}
+
+.fields .section .align .input {
+  height: 40px;
+  border-radius: 30px;
+  border: 2px solid black;
+  padding-left: 1rem;
+  font-size: 1rem;
+}
+
+/* Section 1 */
+
+.fields .section1 {
+  grid-area: 1 / 1 / span 2 / span 2;
+}
+
+.fields .section1 .field .input {
+  width: 800px;
+}
+
+/* Section 2 */
+
+.fields .section2 {
+  grid-area: 1 / 3 / span 2 / span 2;
+}
+
+.fields .section2 .align .input {
+  width: 250px;
+  margin-left: 2.5rem;
+}
+
+/* Section 3 */
+
+.fields .section3 {
+  grid-area: 3 / 1 / span 2 / span 4;
+}
+
+.fields .section3 .field {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.fields .section3 .field .label {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.fields .section3 .field .options {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.fields .section3 .field .options label {
+  font-size: 1.2rem;
+  margin-right: 0.5rem;
+  color: grey;
+  font-weight: bold;
+}
+
+.fields .section3 .field .options .radio {
+  font-size: 2rem;
+}
+
+/* Section 4 */
+
+.fields .section4 {
+  grid-area: 5 / 1 / span 2 / span 4;
+}
+
+.fields .section4 .field {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.fields .section4 .field .input-field {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.fields .section4 .field .input-field .label {
+  font-size: 2rem;
+  margin-right: 1rem;
+}
+
+.fields .section4 .field .input-field .input-wrapper {
+  width: 400px;
+  position: relative;
+}
+
+.fields .section4 .field .input-field .input-wrapper .input {
+  border: 5px solid black;
+  border-radius: 30px;
+  width: 100%;
+  height: 20px;
+  font-size: 1rem;
+  padding: 0.5rem;
+}
+
+.fields .section4 .field .input-field .input-wrapper .submit {
+  background-color: black;
+  color: white;
+  padding: 0.8rem;
+  border: none;
+  border-radius: 50%;
+  height: 33px;
+  width: 33px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 6px;
+  left: 386px;
+  cursor: pointer;
+}
+
+.fields .section4 .field .input-field .input-wrapper .submit:hover {
+  background-color: grey;
+  transition: all 0.3s ease-in-out;
+}
+
+.fields .section4 .field .ingredient-list {
+  display: flex;
+  justify-content: flex-start;
+  align-content: center;
+  flex-wrap: wrap;
+  list-style: none;
+  width: 1300px;
+  height: auto;
+}
+
+.fields .section4 .field .ingredient-list .ingredient-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: black;
+  border-radius: 30px;
+  width: auto;
+  padding: 0rem 0.5rem 0rem 1rem;
+  margin-right: 0.4rem;
+  margin-bottom: 0.4rem;
+}
+
+.fields .section4 .field .ingredient-list .ingredient-list-item .text {
+  color: white;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.fields .section4 .field .ingredient-list .ingredient-list-item .delete {
+  color: white;
+  font-weight: bold;
+  background-color: transparent;
+  border: none;
+  padding: 0.5rem;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+/* Section 5 */
+
+.fields .section5 {
+  grid-area: 7 / 1 / span 2 / span 4;
+}
+
+.fields .section5 .field .label {
+  font-size: 1.9rem;
+}
+
+.fields .section5 .field .step-list .step .index {
+  font-weight: bold;
+  background-color: black;
+  color: white;
+  border-radius: 30px;
+  padding: 0.7rem;
+  margin-bottom: 0.3rem;
+  width: 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.fields .section5 .field .step-list .step .textbox {
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 5px solid black;
+  border-radius: 10px;
+}
+
+.fields .section5 .field .icon {
+  background-color: grey;
+  border: none;
+  height: 50px;
+  width: 50px;
+  color: white;
+  border-radius: 50%;
+  cursor: pointer;
+  margin-top: 0.8rem;
+  margin-right: 1rem;
+  padding: 0.3rem;
+  font-size: 1.5rem;
+}
+
+.fields .section5 .field .add {
+  background-color: black;
+}
+
+.fields .section5 .field .remove {
+  background-color: red;
+}
+
+.fields .section5 .field .add:hover {
+  background-color: grey;
+  transition: 0.3s ease-in-out all;
+}
+
+.fields .section5 .field .remove:hover {
+  background-color: rgb(252, 124, 124);
+  transition: 0.3s ease-in-out all;
+}
+
+/* Section 6 */
+
+.fields .section6 {
+  grid-area: 9 / 4 / span 1 / span 1;
+}
+
+.fields .section6 .field .post-button {
+  background-color: green;
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.fields .section6 .field .post-button:hover {
+  background-color: rgb(81, 204, 81);
+  transition: all 0.3s ease-in-out;
+}
+
+.light {
+  font-weight: 100;
+  font-size: 1rem;
+}
