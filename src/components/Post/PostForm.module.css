@@ -73,6 +73,8 @@
 
 .fields .section3 {
   grid-area: 3 / 1 / span 2 / span 4;
+  border-top: 1px solid rgba(128, 128, 128, 0.199);
+  padding-top: 2rem;
 }
 
 .fields .section3 .field {
@@ -80,12 +82,20 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
+}
+
+.fields .section3 .field:last-child {
+  margin-bottom: 0;
 }
 
 .fields .section3 .field .label {
   font-size: 1.5rem;
   margin-bottom: 0.5rem;
+  background-color: black;
+  color: white;
+  border-radius: 30px;
+  padding: 0.5rem 1rem;
 }
 
 .fields .section3 .field .options {
@@ -97,7 +107,6 @@
 .fields .section3 .field .options label {
   font-size: 1.2rem;
   margin-right: 0.5rem;
-  color: grey;
   font-weight: bold;
 }
 
@@ -109,6 +118,8 @@
 
 .fields .section4 {
   grid-area: 5 / 1 / span 2 / span 4;
+  border-top: 1px solid rgba(128, 128, 128, 0.199);
+  padding-top: 3rem;
 }
 
 .fields .section4 .field {
@@ -207,63 +218,83 @@
 
 .fields .section5 {
   grid-area: 7 / 1 / span 2 / span 4;
+  border-top: 1px solid rgba(128, 128, 128, 0.199);
+  padding-top: 2rem;
 }
 
-.fields .section5 .field .label {
+.fields .section5 .field .input-field {
+  position: relative;
+}
+
+.fields .section5 .field .input-field .label {
   font-size: 1.9rem;
 }
 
-.fields .section5 .field .step-list .step .index {
-  font-weight: bold;
+.fields .section5 .field .input-field .textarea {
+  width: 98%;
+  border: 5px solid black;
+  border-radius: 15px;
+  font-size: 1.3rem;
+  padding: 0.5rem;
+}
+
+.fields .section5 .field .input-field .submit {
+  position: absolute;
+  bottom: 15px;
+  right: 10px;
+  border: none;
   background-color: black;
   color: white;
-  border-radius: 30px;
-  padding: 0.7rem;
-  margin-bottom: 0.3rem;
-  width: 70px;
+  border-radius: 10px;
+  padding: 0.6rem;
+  height: 50px;
+  width: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.fields .section5 .field .step-list .step .textbox {
-  width: 100%;
-  padding: 0.5rem;
-  font-size: 1rem;
-  border: 5px solid black;
-  border-radius: 10px;
-}
-
-.fields .section5 .field .icon {
-  background-color: grey;
-  border: none;
-  height: 50px;
-  width: 50px;
-  color: white;
-  border-radius: 50%;
+  font-size: 1.3rem;
   cursor: pointer;
-  margin-top: 0.8rem;
-  margin-right: 1rem;
-  padding: 0.3rem;
-  font-size: 1.5rem;
 }
 
-.fields .section5 .field .add {
-  background-color: black;
-}
-
-.fields .section5 .field .remove {
-  background-color: red;
-}
-
-.fields .section5 .field .add:hover {
+.fields .section5 .field .input-field .submit:hover {
   background-color: grey;
-  transition: 0.3s ease-in-out all;
+  transition: all 0.3s ease-in-out;
 }
 
-.fields .section5 .field .remove:hover {
-  background-color: rgb(252, 124, 124);
-  transition: 0.3s ease-in-out all;
+.fields .section5 .field .instructions-list {
+  height: auto;
+  list-style-type: none;
+  margin-top: 0.5rem;
+  padding: 0;
+}
+
+.fields .section5 .field .instructions-list .instructions-list-item {
+  margin-bottom: 0.5rem;
+  background-color: black;
+  color: white;
+  border-radius: 10px;
+  padding: 1rem;
+  position: relative;
+}
+
+.fields .section5 .field .instructions-list .instructions-list-item .index {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+.fields .section5 .field .instructions-list .instructions-list-item .delete {
+  background-color: black;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  height: 30px;
+  width: 30px;
+  font-size: 1.3rem;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  cursor: pointer;
 }
 
 /* Section 6 */

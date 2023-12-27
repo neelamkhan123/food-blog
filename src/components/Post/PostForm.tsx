@@ -1,11 +1,12 @@
-import { useRef, useState } from "react";
+import { ChangeEvent, useRef, useState } from "react";
 import uniqid from "uniqid";
 
 import styles from "./PostForm.module.css";
 
-type Textbox = {
+type Instruction = {
   readonly id: string;
   index: number;
+  content: string;
 };
 
 type Ingredient = {
@@ -24,7 +25,7 @@ type Post = {
   vegan: string | undefined;
   vegetarian: string | undefined;
   ingredients: Ingredient[];
-  instructions: [];
+  instructions: Instruction[];
 };
 
 const PostForm = (): JSX.Element => {
@@ -37,30 +38,41 @@ const PostForm = (): JSX.Element => {
 
   const [posts, setPosts] = useState<Post[]>([]);
   const [ingredientList, setIngredientList] = useState<Ingredient[]>([]);
-  const [textboxes, setTextboxes] = useState<Textbox[]>([]);
-  // const [instructions, setInstructions] = useState<Textbox[]>([]);
+  const [instructionsList, setInstructionsList] = useState<Instruction[]>([]);
   const [dairyFreeCheck, setDairyFreeCheck] = useState("");
   const [glutenFreeCheck, setGlutenFreeCheck] = useState("");
   const [ketogenicCheck, setKetogenicCheck] = useState("");
   const [veganCheck, setVeganCheck] = useState("");
   const [vegetarianCheck, setVegetarianCheck] = useState("");
+  const [isEditMode, setIsEditMode] = useState(false);
 
-  const handleAddTextBox = () => {
-    const textbox = {
-      id: uniqid(),
-      index: textboxes?.length + 1,
-    };
-
-    const allTextBoxes = [...textboxes, textbox];
-    setTextboxes(allTextBoxes);
+  const changeEditMode = () => {
+    setIsEditMode((prevState) => !prevState);
   };
 
-  const handleRemoveTextBox = () => {
-    if (textboxes.length <= 1) {
-      alert("You need at least one step. Try being more descriptive.");
-    } else {
-      textboxes.pop();
-    }
+  const updateEditMode = () => {
+    setIsEditMode(false);
+  };
+
+  const handleDeletedIngredients = (selectedId: string) => {
+    const filteredIngredients = ingredientList.filter(
+      (ing) => ing.id !== selectedId
+    );
+    setIngredientList(filteredIngredients);
+  };
+
+  const handleAddInstruction = (e: React.FormEvent) => {
+    e.preventDefault();
+    const instructionListObj = {
+      id: uniqid(),
+      index: instructionsList?.length + 1,
+      content: instructionRef.current!.value,
+    };
+
+    const allInstructions = [...instructionsList, instructionListObj];
+    setInstructionsList(allInstructions);
+
+    instructionRef.current!.value = "";
   };
 
   const handleAddIngredient = (e: React.FormEvent) => {
@@ -109,7 +121,7 @@ const PostForm = (): JSX.Element => {
       vegan: veganCheck,
       vegetarian: vegetarianCheck,
       ingredients: ingredientList,
-      instructions: [],
+      instructions: instructionsList,
     };
 
     const postData = JSON.parse(localStorage.getItem("postData") || "{}");
@@ -131,7 +143,7 @@ const PostForm = (): JSX.Element => {
     setVeganCheck("");
     setVegetarianCheck("");
     setIngredientList([]);
-    // setInstructions([]);
+    setInstructionsList([]);
   };
 
   return (
@@ -380,7 +392,11 @@ const PostForm = (): JSX.Element => {
                       className={styles["ingredient-list-item"]}
                     >
                       <p className={styles.text}>{ingredient.name}</p>
-                      <button className={styles.delete}>
+                      <button
+                        type="button"
+                        onClick={() => handleDeletedIngredients(ingredient.id)}
+                        className={styles.delete}
+                      >
                         <i className="fa-solid fa-xmark"></i>
                       </button>
                     </li>
@@ -393,42 +409,62 @@ const PostForm = (): JSX.Element => {
           {/* Section 5 */}
           <section className={`${styles.section5} ${styles.section}`}>
             <div className={styles.field}>
-              <h1 className={styles.label}>instructions</h1>
-              <div className={styles["step-list"]}>
-                {textboxes.map((box: { id: string; index: number }) => (
-                  <div className={styles.step} key={box.id}>
-                    <label htmlFor={box.id} className={styles.index}>
-                      step {box.index}
-                    </label>
-                    <textarea
-                      name={box.id}
-                      id={box.id}
-                      cols={100}
-                      rows={3}
-                      className={styles.textbox}
-                      ref={instructionRef}
-                    ></textarea>
-                  </div>
-                ))}
+              <div className={styles["input-field"]}>
+                <h1 className={styles.label}>instructions</h1>
+                <textarea
+                  name="instruction"
+                  id="instruction"
+                  className={styles.textarea}
+                  ref={instructionRef}
+                  rows={8}
+                  placeholder="add a step"
+                ></textarea>
+                <button
+                  onClick={handleAddInstruction}
+                  className={styles.submit}
+                >
+                  <i className="fa-solid fa-plus"></i>
+                </button>
               </div>
 
-              {/* Add textbox button */}
-              <button
-                className={`${styles.icon} ${styles.add}`}
-                onClick={handleAddTextBox}
-                type="button"
-              >
-                <i className="fa-solid fa-plus"></i>
-              </button>
-
-              {/* Remove textbox button */}
-              <button
-                className={`${styles.icon} ${styles.remove}`}
-                onClick={handleRemoveTextBox}
-                type="button"
-              >
-                <i className="fa-solid fa-minus"></i>
-              </button>
+              <ul className={styles["instructions-list"]}>
+                {instructionsList.map(
+                  (instruction: {
+                    id: string;
+                    index: number;
+                    content: string;
+                  }) => (
+                    <li
+                      key={instruction.id}
+                      className={styles["instructions-list-item"]}
+                      onDoubleClick={changeEditMode}
+                    >
+                      <p className={styles.index}>step {instruction.index}</p>
+                      <p className={styles.content}>
+                        {isEditMode ? (
+                          <span>
+                            <input
+                              className={styles.edit}
+                              type="text"
+                              defaultValue={instruction.content}
+                              id="edit"
+                              name="edit"
+                            />
+                            <button onClick={updateEditMode} type="button">
+                              OK
+                            </button>
+                            <button onClick={changeEditMode} type="button">
+                              X
+                            </button>
+                          </span>
+                        ) : (
+                          instruction.content
+                        )}
+                      </p>
+                    </li>
+                  )
+                )}
+              </ul>
             </div>
           </section>
 
