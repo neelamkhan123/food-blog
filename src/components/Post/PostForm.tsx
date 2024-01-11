@@ -1,4 +1,4 @@
-import { ChangeEvent, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import uniqid from "uniqid";
 
 import styles from "./PostForm.module.css";
@@ -44,23 +44,8 @@ const PostForm = (): JSX.Element => {
   const [ketogenicCheck, setKetogenicCheck] = useState("");
   const [veganCheck, setVeganCheck] = useState("");
   const [vegetarianCheck, setVegetarianCheck] = useState("");
-  const [isEditMode, setIsEditMode] = useState(false);
 
-  const changeEditMode = () => {
-    setIsEditMode((prevState) => !prevState);
-  };
-
-  const updateEditMode = () => {
-    setIsEditMode(false);
-  };
-
-  const handleDeletedIngredients = (selectedId: string) => {
-    const filteredIngredients = ingredientList.filter(
-      (ing) => ing.id !== selectedId
-    );
-    setIngredientList(filteredIngredients);
-  };
-
+  // Add Instruction
   const handleAddInstruction = (e: React.FormEvent) => {
     e.preventDefault();
     const instructionListObj = {
@@ -69,12 +54,26 @@ const PostForm = (): JSX.Element => {
       content: instructionRef.current!.value,
     };
 
-    const allInstructions = [...instructionsList, instructionListObj];
-    setInstructionsList(allInstructions);
+    // Check for error and set data
+    if (instructionListObj.content.trim().length === 0) {
+      alert("Please add a real instruction");
+    } else {
+      const allInstructions = [...instructionsList, instructionListObj];
+      setInstructionsList(allInstructions);
 
-    instructionRef.current!.value = "";
+      instructionRef.current!.value = "";
+    }
   };
 
+  // Delete Instruction
+  const handleDeletedIngredients = (selectedId: string) => {
+    const filteredIngredients = ingredientList.filter(
+      (ing) => ing.id !== selectedId
+    );
+    setIngredientList(filteredIngredients);
+  };
+
+  // Add Ingredient
   const handleAddIngredient = (e: React.FormEvent) => {
     e.preventDefault();
     const ingredientsListObj = {
@@ -82,10 +81,15 @@ const PostForm = (): JSX.Element => {
       name: ingredientRef.current!.value,
     };
 
-    const ingredientListArr = [...ingredientList, ingredientsListObj];
-    setIngredientList(ingredientListArr);
+    // Check for error and set data
+    if (ingredientsListObj.name.trim().length === 0) {
+      alert("Please add a real ingredient");
+    } else {
+      const ingredientListArr = [...ingredientList, ingredientsListObj];
+      setIngredientList(ingredientListArr);
 
-    ingredientRef.current!.value = "";
+      ingredientRef.current!.value = "";
+    }
   };
 
   const handleDairyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -130,20 +134,88 @@ const PostForm = (): JSX.Element => {
     const allPosts = [...posts, postInputData];
     setPosts(allPosts);
 
-    localStorage.setItem("postData", JSON.stringify(allPosts));
+    // ❗❗❗❗ Error Checks ❗❗❗❗
+    if (
+      titleRef.current!.value === "" ||
+      imageRef.current!.value === "" ||
+      servingsRef.current!.value === "" ||
+      durationRef.current!.value === "" ||
+      dairyFreeCheck === "" ||
+      glutenFreeCheck === "" ||
+      ketogenicCheck === "" ||
+      veganCheck === "" ||
+      vegetarianCheck === "" ||
+      ingredientList.length === 0 ||
+      instructionsList.length === 0
+    ) {
+      alert("Please fill in ALL forms");
+    } else {
+      console.log("POST");
+      // Save Input Data
+      localStorage.setItem("postData", JSON.stringify(allPosts));
+      // Clear Inputs
+      titleRef.current!.value = "";
+      imageRef.current!.value = "";
+      servingsRef.current!.value = "";
+      durationRef.current!.value = "";
+      setDairyFreeCheck("");
+      setGlutenFreeCheck("");
+      setKetogenicCheck("");
+      setVeganCheck("");
+      setVegetarianCheck("");
+      setIngredientList([]);
+      setInstructionsList([]);
+    }
 
-    // Clear Inputs
-    titleRef.current!.value = "";
-    imageRef.current!.value = "";
-    servingsRef.current!.value = "";
-    durationRef.current!.value = "";
-    setDairyFreeCheck("");
-    setGlutenFreeCheck("");
-    setKetogenicCheck("");
-    setVeganCheck("");
-    setVegetarianCheck("");
-    setIngredientList([]);
-    setInstructionsList([]);
+    // Section 1 & 2 Errors
+    const sectionOneAndTwoErrors = (
+      idSelector: string,
+      ref: React.RefObject<HTMLInputElement>
+    ) => {
+      const selector = document.getElementById(idSelector);
+      if (ref.current!.value === " ") {
+        selector!.style.border = "3px solid red";
+      } else {
+        selector!.style.border = "2px solid black";
+      }
+    };
+    sectionOneAndTwoErrors("title", titleRef);
+    sectionOneAndTwoErrors("image", imageRef);
+    sectionOneAndTwoErrors("servings", servingsRef);
+    sectionOneAndTwoErrors("duration", durationRef);
+
+    // Section 3 Errors
+    const sectionThreeErrors = (
+      idSelector: string,
+      state: React.SetStateAction<string>
+    ) => {
+      const selector = document.getElementById(idSelector);
+      if (state === "") {
+        selector!.style.backgroundColor = "red";
+      } else {
+        selector!.style.backgroundColor = "black";
+      }
+    };
+    sectionThreeErrors("dairy-free", dairyFreeCheck);
+    sectionThreeErrors("gluten-free", glutenFreeCheck);
+    sectionThreeErrors("ketogenic", ketogenicCheck);
+    sectionThreeErrors("vegan", veganCheck);
+    sectionThreeErrors("vegetarian", vegetarianCheck);
+
+    // Section 4 & 5 Errors
+    const sectionFourAndFiveErrors = (
+      idSelector: string,
+      arr: React.SetStateAction<Ingredient[] | Instruction[]>
+    ) => {
+      const selector = document.getElementById(idSelector);
+      if (arr.length === 0) {
+        selector!.style.border = "5px solid red";
+      } else {
+        selector!.style.border = "5px solid black";
+      }
+    };
+    sectionFourAndFiveErrors("ingredients", ingredientList);
+    sectionFourAndFiveErrors("instructions", instructionsList);
   };
 
   return (
@@ -190,7 +262,8 @@ const PostForm = (): JSX.Element => {
               <input
                 id="servings"
                 name="servings"
-                type="text"
+                type="number"
+                min={1}
                 className={styles.input}
                 placeholder="how many people will this serve?"
                 ref={servingsRef}
@@ -203,7 +276,8 @@ const PostForm = (): JSX.Element => {
               <input
                 id="duration"
                 name="duration"
-                type="text"
+                type="number"
+                min={1}
                 className={styles.input}
                 placeholder="how long will it take?"
                 ref={durationRef}
@@ -214,7 +288,9 @@ const PostForm = (): JSX.Element => {
           {/* Section 3 */}
           <section className={`${styles.section3} ${styles.section}`}>
             <div className={styles.field}>
-              <legend className={styles.label}>is it dairy free?</legend>
+              <legend className={styles.label} id="dairy-free">
+                is it dairy free?
+              </legend>
               <div className={styles.options}>
                 <div className={styles.yes}>
                   <input
@@ -243,7 +319,9 @@ const PostForm = (): JSX.Element => {
               </div>
             </div>
             <div className={styles.field}>
-              <legend className={styles.label}>is it gluten free?</legend>
+              <legend className={styles.label} id="gluten-free">
+                is it gluten free?
+              </legend>
               <div className={styles.options}>
                 <div className={styles.yes}>
                   <input
@@ -272,7 +350,9 @@ const PostForm = (): JSX.Element => {
               </div>
             </div>
             <div className={styles.field}>
-              <legend className={styles.label}>is it ketogenic?</legend>
+              <legend className={styles.label} id="ketogenic">
+                is it ketogenic?
+              </legend>
               <div className={styles.options}>
                 <div className={styles.yes}>
                   <input
@@ -301,7 +381,9 @@ const PostForm = (): JSX.Element => {
               </div>
             </div>
             <div className={styles.field}>
-              <legend className={styles.label}>is it vegan?</legend>
+              <legend className={styles.label} id="vegan">
+                is it vegan?
+              </legend>
               <div className={styles.options}>
                 <div className={styles.yes}>
                   <input
@@ -330,7 +412,9 @@ const PostForm = (): JSX.Element => {
               </div>
             </div>
             <div className={styles.field}>
-              <legend className={styles.label}>is it vegetarian?</legend>
+              <legend className={styles.label} id="vegetarian">
+                is it vegetarian?
+              </legend>
               <div className={styles.options}>
                 <div className={styles.yes}>
                   <input
@@ -412,8 +496,8 @@ const PostForm = (): JSX.Element => {
               <div className={styles["input-field"]}>
                 <h1 className={styles.label}>instructions</h1>
                 <textarea
-                  name="instruction"
-                  id="instruction"
+                  name="instructions"
+                  id="instructions"
                   className={styles.textarea}
                   ref={instructionRef}
                   rows={8}
@@ -437,30 +521,9 @@ const PostForm = (): JSX.Element => {
                     <li
                       key={instruction.id}
                       className={styles["instructions-list-item"]}
-                      onDoubleClick={changeEditMode}
                     >
                       <p className={styles.index}>step {instruction.index}</p>
-                      <p className={styles.content}>
-                        {isEditMode ? (
-                          <span>
-                            <input
-                              className={styles.edit}
-                              type="text"
-                              defaultValue={instruction.content}
-                              id="edit"
-                              name="edit"
-                            />
-                            <button onClick={updateEditMode} type="button">
-                              OK
-                            </button>
-                            <button onClick={changeEditMode} type="button">
-                              X
-                            </button>
-                          </span>
-                        ) : (
-                          instruction.content
-                        )}
-                      </p>
+                      <p className={styles.content}>{instruction.content}</p>
                     </li>
                   )
                 )}
