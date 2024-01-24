@@ -6,14 +6,10 @@ import {
   useEffect,
 } from "react";
 
-type MyBookmarksProviderProps = {
-  children: ReactNode;
-};
-
 interface MyBookmark {
   userId: string | null;
   status: boolean;
-  id: number;
+  id: string;
   title: string;
   image: string;
   servings: number;
@@ -36,7 +32,7 @@ interface MyBookmark {
 type MyBookmarkContextType = {
   bookmarks: MyBookmark[];
   toggleBookmark: (bookmark: MyBookmark) => void;
-  deleteBookmark: (bookmarkId: number) => void;
+  deleteBookmark: (bookmarkId: string) => void;
   isBookmarked: boolean;
 };
 
@@ -44,47 +40,57 @@ export const MyBookmarksContext = createContext<MyBookmarkContextType | null>(
   null
 );
 
+type MyBookmarksProviderProps = {
+  children: ReactNode;
+};
+
 export const MyBookmarksProvider = ({ children }: MyBookmarksProviderProps) => {
   const [bookmarks, setBookmarks] = useState<MyBookmark[]>([]);
 
-  const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
+  const [isBookmarked, setIsBookmarked] = useState(false);
 
-  useEffect(() => {
-    const savedBookmarks = JSON.parse(localStorage.getItem("bookmark") || "[]");
-    setBookmarks(savedBookmarks);
-  }, []);
+  // useEffect(() => {
+  //   const savedBookmarks = JSON.parse(localStorage.getItem("bookmark") || "[]");
+  //   setBookmarks(savedBookmarks);
+  // }, []);
 
-  useEffect(() => {
-    localStorage.setItem("bookmark", JSON.stringify(bookmarks));
-  }, [bookmarks]);
+  // useEffect(() => {
+  //   localStorage.setItem("bookmark", JSON.stringify(bookmarks));
+  // }, [bookmarks]);
 
   const toggleBookmark = (bookmark: MyBookmark) => {
-    setBookmarks([
-      {
-        userId: bookmark.userId,
-        status: bookmark.status,
-        id: bookmark.id,
-        title: bookmark.title,
-        image: bookmark.image,
-        servings: bookmark.servings,
-        readyInMinutes: bookmark.readyInMinutes,
-        dairyFree: bookmark.dairyFree,
-        glutenFree: bookmark.glutenFree,
-        ketogenic: bookmark.ketogenic,
-        vegan: bookmark.vegan,
-        vegetarian: bookmark.vegetarian,
-        extendedIngredients: bookmark.extendedIngredients.map(
-          (ing: { original: string; id: string }) => ({
-            original: ing.original,
-            id: ing.id,
-          })
-        ),
-        steps: bookmark.steps.map((inst: { number: number; step: string }) => ({
-          number: inst.number,
-          step: inst.step,
-        })),
-      },
-    ]);
+    setIsBookmarked((prevState) => !prevState);
+    isBookmarked
+      ? setBookmarks((prevBookmark) => [
+          {
+            userId: bookmark.userId,
+            status: bookmark.status,
+            id: bookmark.id,
+            title: bookmark.title,
+            image: bookmark.image,
+            servings: bookmark.servings,
+            readyInMinutes: bookmark.readyInMinutes,
+            dairyFree: bookmark.dairyFree,
+            glutenFree: bookmark.glutenFree,
+            ketogenic: bookmark.ketogenic,
+            vegan: bookmark.vegan,
+            vegetarian: bookmark.vegetarian,
+            extendedIngredients: bookmark.extendedIngredients.map(
+              (ing: { original: string; id: string }) => ({
+                original: ing.original,
+                id: ing.id,
+              })
+            ),
+            steps: bookmark.steps.map(
+              (inst: { number: number; step: string }) => ({
+                number: inst.number,
+                step: inst.step,
+              })
+            ),
+          },
+          ...prevBookmark,
+        ])
+      : bookmarks.pop();
   };
 
   const deleteBookmark = () => {

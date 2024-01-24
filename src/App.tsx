@@ -9,6 +9,7 @@ import BookmarksPage from "./pages/BookmarksPage";
 import BookmarkedRecipePage from "./pages/BookmarkedRecipePage";
 import MyAccountPage from "./pages/MyAccountPage";
 import PostFormPage from "./pages/PostFormPage";
+import ExplorePage from "./pages/ExplorePage";
 
 const router = createBrowserRouter([
   {
@@ -46,6 +47,10 @@ const router = createBrowserRouter([
       {
         path: "/post-form",
         element: <PostFormPage />,
+      },
+      {
+        path: "/explore",
+        element: <ExplorePage />,
       },
     ],
   },

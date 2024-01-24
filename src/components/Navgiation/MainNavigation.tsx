@@ -2,7 +2,7 @@ import { NavLink, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { auth } from "../../firebase";
 import { signOut, onAuthStateChanged } from "firebase/auth";
-// import SearchBar from "./SearchBar";
+import SearchBar from "./SearchBar";
 import Logo from "../UI/Logo";
 
 import styles from "./MainNavigation.module.css";
@@ -66,7 +66,7 @@ const MainNavigation = (): JSX.Element => {
             )} */}
             <div className={styles["user-active"]}>
               <div className={styles["nav-router"]}>
-                <NavLink to="/" className={styles["auth-icon"]}>
+                <NavLink to="/explore" className={styles["auth-icon"]}>
                   <i className="fa-solid fa-hashtag"></i>
                 </NavLink>
 
@@ -89,7 +89,7 @@ const MainNavigation = (): JSX.Element => {
                   className={styles["navbar-list"]}
                 >
                   <li className={styles["navbar-list-item"]}>
-                    {auth.currentUser!.email}
+                    {auth.currentUser?.email}
                   </li>
 
                   <li className={styles["navbar-list-item"]}>

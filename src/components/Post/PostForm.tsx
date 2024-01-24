@@ -1,11 +1,13 @@
 import { useRef, useState } from "react";
 import uniqid from "uniqid";
+import { useNavigate } from "react-router";
+import { auth } from "../../firebase";
 
 import styles from "./PostForm.module.css";
+import SuccessModal from "../UI/SuccessModal";
 
 type Instruction = {
   readonly id: string;
-  index: number;
   content: string;
 };
 
@@ -15,6 +17,7 @@ type Ingredient = {
 };
 
 type Post = {
+  userId: string | null | undefined;
   title: string;
   image: string;
   servings: number;
@@ -36,7 +39,6 @@ const PostForm = (): JSX.Element => {
   const ingredientRef = useRef<HTMLInputElement>(null);
   const instructionRef = useRef<HTMLTextAreaElement>(null);
 
-  const [posts, setPosts] = useState<Post[]>([]);
   const [ingredientList, setIngredientList] = useState<Ingredient[]>([]);
   const [instructionsList, setInstructionsList] = useState<Instruction[]>([]);
   const [dairyFreeCheck, setDairyFreeCheck] = useState("");
@@ -44,13 +46,25 @@ const PostForm = (): JSX.Element => {
   const [ketogenicCheck, setKetogenicCheck] = useState("");
   const [veganCheck, setVeganCheck] = useState("");
   const [vegetarianCheck, setVegetarianCheck] = useState("");
+  const [successModal, setSuccessModal] = useState(false);
+
+  const navigate = useNavigate();
+
+  const user = auth.currentUser;
+
+  // Delete Instruction
+  const handleDeletedInstructions = (selectedId: string) => {
+    const filteredInstructions = instructionsList.filter(
+      (ing) => ing.id !== selectedId
+    );
+    setInstructionsList(filteredInstructions);
+  };
 
   // Add Instruction
   const handleAddInstruction = (e: React.FormEvent) => {
     e.preventDefault();
     const instructionListObj = {
       id: uniqid(),
-      index: instructionsList?.length + 1,
       content: instructionRef.current!.value,
     };
 
@@ -65,7 +79,7 @@ const PostForm = (): JSX.Element => {
     }
   };
 
-  // Delete Instruction
+  // Delete Ingredient
   const handleDeletedIngredients = (selectedId: string) => {
     const filteredIngredients = ingredientList.filter(
       (ing) => ing.id !== selectedId
@@ -114,7 +128,11 @@ const PostForm = (): JSX.Element => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    let postArr: Post[] = [];
+
     const postInputData: Post = {
+      userId: user?.email,
       title: titleRef.current!.value,
       image: imageRef.current!.value,
       servings: Number(servingsRef.current!.value),
@@ -128,11 +146,10 @@ const PostForm = (): JSX.Element => {
       instructions: instructionsList,
     };
 
-    const postData = JSON.parse(localStorage.getItem("postData") || "{}");
-    setPosts(postData);
-
-    const allPosts = [...posts, postInputData];
-    setPosts(allPosts);
+    postArr.push(postInputData);
+    postArr = postArr.concat(
+      JSON.parse(localStorage.getItem("postData") || "[]")
+    );
 
     // ❗❗❗❗ Error Checks ❗❗❗❗
     if (
@@ -152,19 +169,32 @@ const PostForm = (): JSX.Element => {
     } else {
       console.log("POST");
       // Save Input Data
-      localStorage.setItem("postData", JSON.stringify(allPosts));
-      // Clear Inputs
-      titleRef.current!.value = "";
-      imageRef.current!.value = "";
-      servingsRef.current!.value = "";
-      durationRef.current!.value = "";
-      setDairyFreeCheck("");
-      setGlutenFreeCheck("");
-      setKetogenicCheck("");
-      setVeganCheck("");
-      setVegetarianCheck("");
-      setIngredientList([]);
-      setInstructionsList([]);
+      localStorage.setItem("postData", JSON.stringify(postArr));
+
+      // Success Message
+      setSuccessModal(true);
+
+      // Navigate to Account
+      setTimeout(() => {
+        // Clear Inputs
+        titleRef.current!.value = "";
+        imageRef.current!.value = "";
+        servingsRef.current!.value = "";
+        durationRef.current!.value = "";
+        setDairyFreeCheck("");
+        setGlutenFreeCheck("");
+        setKetogenicCheck("");
+        setVeganCheck("");
+        setVegetarianCheck("");
+        setIngredientList([]);
+        setInstructionsList([]);
+
+        // Navigate To Account
+        navigate("/my-account");
+
+        // Success Message
+        setSuccessModal(false);
+      }, 1000);
     }
 
     // Section 1 & 2 Errors
@@ -173,7 +203,7 @@ const PostForm = (): JSX.Element => {
       ref: React.RefObject<HTMLInputElement>
     ) => {
       const selector = document.getElementById(idSelector);
-      if (ref.current!.value === " ") {
+      if (ref.current!.value === "") {
         selector!.style.border = "3px solid red";
       } else {
         selector!.style.border = "2px solid black";
@@ -513,17 +543,27 @@ const PostForm = (): JSX.Element => {
 
               <ul className={styles["instructions-list"]}>
                 {instructionsList.map(
-                  (instruction: {
-                    id: string;
-                    index: number;
-                    content: string;
-                  }) => (
+                  (
+                    instruction: {
+                      id: string;
+                      content: string;
+                    },
+                    i
+                  ) => (
                     <li
                       key={instruction.id}
                       className={styles["instructions-list-item"]}
                     >
-                      <p className={styles.index}>step {instruction.index}</p>
+                      <p className={styles.index}>step {i + 1}</p>
                       <p className={styles.content}>{instruction.content}</p>
+                      <button
+                        onClick={() =>
+                          handleDeletedInstructions(instruction.id)
+                        }
+                        className={styles.delete}
+                      >
+                        X
+                      </button>
                     </li>
                   )
                 )}
@@ -540,6 +580,12 @@ const PostForm = (): JSX.Element => {
             </div>
           </section>
         </div>
+
+        {/* Success Modal */}
+        {successModal && (
+          <SuccessModal status={false} message={"Successfully added post!"} />
+        )}
+        {/* <SuccessModal message={" Successfully added!"} /> */}
       </div>
     </form>
   );

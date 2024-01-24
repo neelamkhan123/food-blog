@@ -1,7 +1,8 @@
-import RecipeLayout from "../components/Recipes/RecipeLayout";
+// import RecipeLayout from "../components/Recipes/RecipeLayout";
+import SearchedRecipe from "../components/Recipes/SearchedRecipe";
 
 const RecipePage = (): JSX.Element => {
-  return <RecipeLayout />;
+  return <SearchedRecipe />;
 };
 
 export default RecipePage;

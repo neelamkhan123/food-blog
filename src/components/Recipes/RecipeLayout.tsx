@@ -1,155 +1,43 @@
-// import { useState } from "react";
-import { auth } from "../../firebase";
-import { useNavigate } from "react-router";
 import { useMyBookmarkContext } from "../../contexts/MyBookmarks";
+import { auth } from "../../firebase";
 
 import styles from "./Recipe.module.css";
 
-// interface Bookmark {
-//   userId: string | null;
-//   status: boolean;
-//   id: number;
-//   title: string;
-//   image: string;
-//   servings: number;
-//   readyInMinutes: number;
-//   dairyFree: boolean;
-//   glutenFree: boolean;
-//   ketogenic: boolean;
-//   vegan: boolean;
-//   vegetarian: boolean;
-//   extendedIngredients: {
-//     original: string;
-//     id: string;
-//   }[];
-//   steps: {
-//     number: number;
-//     step: string;
-//   }[];
-// }
+type RecipeLayoutProps = {
+  recipeId: string;
+  recipeTitle: string;
+  recipeImage: string;
+  recipeServings: number;
+  recipeDuration: number;
+  recipeDairyFree: boolean;
+  recipeGlutenFree: boolean;
+  recipeKetogenic: boolean;
+  recipeVegan: boolean;
+  recipeVegetarian: boolean;
+  recipeIngredients: [];
+  recipeInstructions: [];
+  recipeBookmark: any;
+};
 
-const RecipeLayout = (): JSX.Element => {
-  // const { bookmarks, toggleBookmark } = useBookmarkContext();
+const RecipeLayout = ({
+  recipeId,
+  recipeTitle,
+  recipeImage,
+  recipeServings,
+  recipeDuration,
+  recipeDairyFree,
+  recipeGlutenFree,
+  recipeKetogenic,
+  recipeVegan,
+  recipeVegetarian,
+  recipeIngredients,
+  recipeInstructions,
+  recipeBookmark,
+}: RecipeLayoutProps): JSX.Element => {
+  const user = auth?.currentUser;
 
-  const { bookmarks, toggleBookmark, deleteBookmark, isBookmarked } =
-    useMyBookmarkContext();
-
-  // const [bookmarked, setBookmarked] = useState(false);
-
-  const navigate = useNavigate();
-
-  const recipeStorage = JSON.parse(localStorage.getItem("recipe") || "{}");
-
-  const recipe = {
-    id: recipeStorage[0].id,
-    title: recipeStorage[0].title,
-    image: recipeStorage[0].image,
-    servings: recipeStorage[0].servings,
-    readyInMinutes: recipeStorage[0].readyInMinutes,
-    dairyFree: recipeStorage[0].dairyFree,
-    glutenFree: recipeStorage[0].glutenFree,
-    ketogenic: recipeStorage[0].ketogenic,
-    vegan: recipeStorage[0].vegan,
-    vegetarian: recipeStorage[0].vegetarian,
-    extendedIngredients: recipeStorage[0].extendedIngredients.map(
-      (ing: { original: string; id: string }) => ({
-        original: ing.original,
-        id: ing.id,
-      })
-    ),
-  };
-
-  const recipeInstructionsStorage = JSON.parse(
-    localStorage.getItem("recipeInstructions") || "{}"
-  );
-  const recipeInstructions = {
-    steps: recipeInstructionsStorage[0].steps.map(
-      (inst: { number: number; step: string }) => ({
-        number: inst.number,
-        step: inst.step,
-      })
-    ),
-  };
-
-  // const bookmarkUserAccess = () => {
-  //   // setBookmarked((prevState) => !prevState);
-  //   const user = auth.currentUser;
-  // if (user) {
-  //   const bookmark: Bookmark = {
-  //     userId: user.email,
-  //     status: true,
-  //     id: recipe.id,
-  //     title: recipe.title,
-  //     image: recipe.image,
-  //     servings: recipe.servings,
-  //     readyInMinutes: recipe.readyInMinutes,
-  //     dairyFree: recipe.dairyFree,
-  //     glutenFree: recipe.glutenFree,
-  //     ketogenic: recipe.ketogenic,
-  //     vegan: recipe.vegan,
-  //     vegetarian: recipe.vegetarian,
-  //     extendedIngredients: recipe.extendedIngredients.map(
-  //       (ing: { original: string; id: string }) => ({
-  //         original: ing.original,
-  //         id: ing.id,
-  //       })
-  //     ),
-  //     steps: recipeInstructions.steps.map(
-  //       (inst: { number: number; step: string }) => ({
-  //         number: inst.number,
-  //         step: inst.step,
-  //       })
-  //     ),
-  //   };
-
-  //     const bookmarks = JSON.parse(localStorage.getItem("bookmarked") || "[]");
-
-  //     // if (bookmarked === true) {
-  //     //   bookmarks.pop();
-  //     // } else {
-  //     //   bookmarks.push(bookmark);
-  //     // }
-
-  //     localStorage.setItem("bookmarked", JSON.stringify(bookmarks));
-  //   } else {
-  //     navigate("/login");
-  //   }
-  // };
-
-  const bookmarkUserAccess = () => {
-    const user = auth.currentUser;
-    if (user) {
-      toggleBookmark({
-        userId: user.email,
-        status: true,
-        id: recipe.id,
-        title: recipe.title,
-        image: recipe.image,
-        servings: recipe.servings,
-        readyInMinutes: recipe.readyInMinutes,
-        dairyFree: recipe.dairyFree,
-        glutenFree: recipe.glutenFree,
-        ketogenic: recipe.ketogenic,
-        vegan: recipe.vegan,
-        vegetarian: recipe.vegetarian,
-        extendedIngredients: recipe.extendedIngredients.map(
-          (ing: { original: string; id: string }) => ({
-            original: ing.original,
-            id: ing.id,
-          })
-        ),
-        steps: recipeInstructions.steps.map(
-          (inst: { number: number; step: string }) => ({
-            number: inst.number,
-            step: inst.step,
-          })
-        ),
-      });
-      console.log(bookmarks);
-    } else {
-      navigate("/login");
-    }
-  };
+  const { bookmarks, toggleBookmark, isBookmarked } = useMyBookmarkContext();
+  console.log(bookmarks);
 
   return (
     <main className={styles["recipe-container"]}>
@@ -157,7 +45,7 @@ const RecipeLayout = (): JSX.Element => {
         <div className={styles["image-container"]}>
           <div className={styles["image-wrapper"]}></div>
           <img
-            src={recipe.image}
+            src={recipeImage}
             className={styles["recipe-image"]}
             alt="Food"
           />
@@ -166,49 +54,47 @@ const RecipeLayout = (): JSX.Element => {
         <div className={styles["ingredients-container"]}>
           <h2 className={styles["ingredients-header"]}>ingredients</h2>
           <ul className={styles["ingredients-list"]}>
-            {recipe.extendedIngredients.map(
-              (ing: { original: string; id: string }) => (
-                <li key={ing.id} className={styles["ingredients-list-item"]}>
-                  {ing.original}
-                </li>
-              )
-            )}
+            {recipeIngredients.map((ing: { original: string; id: string }) => (
+              <li key={ing.id} className={styles["ingredients-list-item"]}>
+                {ing.original}
+              </li>
+            ))}
           </ul>
         </div>
         <div className={styles["recipe-data-container"]}>
           <div className={styles["recipe-header"]}>
-            <h1 className={styles["recipe-name"]}>{recipe.title}</h1>
+            <h1 className={styles["recipe-name"]}>{recipeTitle}</h1>
             <ul className={styles.extras}>
               <li className={styles["extras-list-item"]}>
                 <div className={styles.servings}>
                   <i className="fa-solid fa-user"></i>
                 </div>
-                <p className={styles.text}>{recipe.servings}</p>
+                <p className={styles.text}>{recipeServings}</p>
               </li>
               <li className={styles["extras-list-item"]}>
                 <div className={styles.duration}>
                   <i className="fa-solid fa-clock"></i>
                 </div>
-                <p className={styles.text}>{recipe.readyInMinutes}mins</p>
+                <p className={styles.text}>{recipeDuration}mins</p>
               </li>
             </ul>
           </div>
 
-          <div
+          <button
             className={styles["bookmarks-container"]}
-            onClick={bookmarkUserAccess}
+            onClick={() => toggleBookmark(recipeBookmark)}
           >
-            {/* {bookmarked ? (
+            {isBookmarked ? (
               <i className="fa-solid fa-bookmark"></i>
             ) : (
               <i className="fa-regular fa-bookmark"></i>
-            )} */}
-            <i className="fa-regular fa-bookmark"></i>
-          </div>
+            )}
+            {/* <i className="fa-regular fa-bookmark"></i> */}
+          </button>
 
           <div className={styles["steps-container"]}>
             <ul className={styles["steps-list"]}>
-              {recipeInstructions.steps.map(
+              {recipeInstructions.map(
                 (instr: { number: number; step: string }) => (
                   <li key={instr.number} className={styles["steps-list-item"]}>
                     <h2 className={styles["step-heading"]}>
@@ -225,7 +111,7 @@ const RecipeLayout = (): JSX.Element => {
           <ul className={styles["source-contents-list"]}>
             <li className={styles["source-contents-list-item"]}>
               <div className={styles.check}>
-                {recipe.dairyFree ? (
+                {recipeDairyFree ? (
                   <div className={styles.checkmark}>
                     <i className="fa-solid fa-circle-check"></i>
                   </div>
@@ -239,7 +125,7 @@ const RecipeLayout = (): JSX.Element => {
             </li>
             <li className={styles["source-contents-list-item"]}>
               <div className={styles.check}>
-                {recipe.glutenFree ? (
+                {recipeGlutenFree ? (
                   <div className={styles.checkmark}>
                     <i className="fa-solid fa-circle-check"></i>
                   </div>
@@ -253,7 +139,7 @@ const RecipeLayout = (): JSX.Element => {
             </li>
             <li className={styles["source-contents-list-item"]}>
               <div className={styles.check}>
-                {recipe.ketogenic ? (
+                {recipeKetogenic ? (
                   <div className={styles.checkmark}>
                     <i className="fa-solid fa-circle-check"></i>
                   </div>
@@ -267,7 +153,7 @@ const RecipeLayout = (): JSX.Element => {
             </li>
             <li className={styles["source-contents-list-item"]}>
               <div className={styles.check}>
-                {recipe.vegan ? (
+                {recipeVegan ? (
                   <div className={styles.checkmark}>
                     <i className="fa-solid fa-circle-check"></i>
                   </div>
@@ -281,7 +167,7 @@ const RecipeLayout = (): JSX.Element => {
             </li>
             <li className={styles["source-contents-list-item"]}>
               <div className={styles.check}>
-                {recipe.vegetarian ? (
+                {recipeVegetarian ? (
                   <div className={styles.checkmark}>
                     <i className="fa-solid fa-circle-check"></i>
                   </div>

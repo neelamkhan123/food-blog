@@ -38,157 +38,156 @@ interface SearchBarProps {
   width: string;
 }
 
-// const SearchBar = (): JSX.Element => {
-const SearchBar = ({ className, width }: SearchBarProps): JSX.Element => {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [query, setQuery] = useState("");
-  const [queryResults, setQueryResults] = useState<Item[]>([]);
-  const [showList, setShowList] = useState(false);
-  const [id, setId] = useState(324694);
+const SearchBar = (): JSX.Element => {
+  // const SearchBar = ({ className, width }: SearchBarProps): JSX.Element => {
+  //   const inputRef = useRef<HTMLInputElement>(null);
+  //   const [query, setQuery] = useState("");
+  //   const [queryResults, setQueryResults] = useState<Item[]>([]);
+  //   const [showList, setShowList] = useState(false);
+  //   const [id, setId] = useState(324694);
 
-  const navigate = useNavigate();
+  //   const navigate = useNavigate();
 
-  const recipeInfo = (info: Recipe) => {
-    const recipe: Recipe[] = [];
+  //   const recipeInfo = (info: Recipe) => {
+  //     const recipe: Recipe[] = [];
 
-    const recipeData: Recipe = {
-      id: info.id,
-      title: info.title,
-      image: info.image,
-      servings: info.servings,
-      readyInMinutes: info.readyInMinutes,
-      dairyFree: info.dairyFree,
-      glutenFree: info.glutenFree,
-      ketogenic: info.ketogenic,
-      vegan: info.vegan,
-      vegetarian: info.vegetarian,
-      extendedIngredients: info.extendedIngredients.map((ing) => ({
-        original: ing.original,
-        id: uniqid(),
-      })),
-    };
-    recipe.push(recipeData);
-    localStorage.setItem("recipe", JSON.stringify(recipe));
-  };
+  //     const recipeData: Recipe = {
+  //       id: info.id,
+  //       title: info.title,
+  //       image: info.image,
+  //       servings: info.servings,
+  //       readyInMinutes: info.readyInMinutes,
+  //       dairyFree: info.dairyFree,
+  //       glutenFree: info.glutenFree,
+  //       ketogenic: info.ketogenic,
+  //       vegan: info.vegan,
+  //       vegetarian: info.vegetarian,
+  //       extendedIngredients: info.extendedIngredients.map((ing) => ({
+  //         original: ing.original,
+  //         id: uniqid(),
+  //       })),
+  //     };
+  //     recipe.push(recipeData);
+  //     localStorage.setItem("recipe", JSON.stringify(recipe));
+  //   };
 
-  const recipeSteps = (instruct: Instructions) => {
-    const recipeInstructions: Instructions[] = [];
+  //   const recipeSteps = (instruct: Instructions) => {
+  //     const recipeInstructions: Instructions[] = [];
 
-    const recSteps: Instructions = {
-      steps: instruct.steps.map((inst) => ({
-        number: inst.number,
-        step: inst.step,
-      })),
-    };
-    recipeInstructions.push(recSteps);
-    localStorage.setItem(
-      "recipeInstructions",
-      JSON.stringify(recipeInstructions)
-    );
-  };
+  //     const recSteps: Instructions = {
+  //       steps: instruct.steps.map((inst) => ({
+  //         number: inst.number,
+  //         step: inst.step,
+  //       })),
+  //     };
+  //     recipeInstructions.push(recSteps);
+  //     localStorage.setItem(
+  //       "recipeInstructions",
+  //       JSON.stringify(recipeInstructions)
+  //     );
+  //   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setQuery(inputRef.current!.value);
-    setShowList(true);
-  };
+  //   const handleSubmit = (e: React.FormEvent) => {
+  //     e.preventDefault();
+  //     setQuery(inputRef.current!.value);
+  //     setShowList(true);
+  //   };
 
-  const selectResultHandler = (id: number) => {
-    if (id) {
-      setId(id);
-    }
-    inputRef.current!.value = "";
-    setTimeout(() => {
-      navigate("/recipe");
-    }, 200);
-  };
+  //   const selectResultHandler = (id: number) => {
+  //     setId(id);
+  //     inputRef.current!.value = "";
+  //     setTimeout(() => {
+  //       navigate("/recipe");
+  //       window.location.reload();
+  //     }, 200);
+  //   };
 
-  useEffect(() => {
-    const getPosts = async () => {
-      try {
-        const res = await fetch(
-          `https://api.spoonacular.com/recipes/complexSearch?apiKey=8d4c6012caa14184b35f48eb2e74d415&instructionsRequired=true&query=${query}`
-        );
-        const data = await res.json();
-        const { results } = data;
-        setQueryResults(results);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    getPosts();
-  }, [query]);
+  //   useEffect(() => {
+  //     const getPosts = async () => {
+  //       try {
+  //         const res = await fetch(
+  //           `https://api.spoonacular.com/recipes/complexSearch?apiKey=8d4c6012caa14184b35f48eb2e74d415&instructionsRequired=true&query=${query}`
+  //         );
+  //         const data = await res.json();
+  //         const { results } = data;
+  //         setQueryResults(results);
+  //       } catch (err) {
+  //         console.error(err);
+  //       }
+  //     };
+  //     getPosts();
+  //   }, [query]);
 
-  useEffect(() => {
-    const getRecipe = async () => {
-      try {
-        const res = await fetch(
-          `https://api.spoonacular.com/recipes/${id}/information?apiKey=8d4c6012caa14184b35f48eb2e74d415&includeNutrition=false`
-        );
-        const data = await res.json();
-        recipeInfo(data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    getRecipe();
-  }, [id]);
+  //   useEffect(() => {
+  //     const getRecipe = async () => {
+  //       try {
+  //         const res = await fetch(
+  //           `https://api.spoonacular.com/recipes/${id}/information?apiKey=8d4c6012caa14184b35f48eb2e74d415&includeNutrition=false`
+  //         );
+  //         const data = await res.json();
+  //         recipeInfo(data);
+  //       } catch (err) {
+  //         console.error(err);
+  //       }
+  //     };
+  //     getRecipe();
+  //   }, [id]);
 
-  useEffect(() => {
-    const getInstructions = async () => {
-      try {
-        const res = await fetch(
-          `https://api.spoonacular.com/recipes/${id}/analyzedInstructions?apiKey=8d4c6012caa14184b35f48eb2e74d415`
-        );
-        const data = await res.json();
-        recipeSteps(data[0]);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    getInstructions();
-  }, [id]);
+  //   useEffect(() => {
+  //     const getInstructions = async () => {
+  //       try {
+  //         const res = await fetch(
+  //           `https://api.spoonacular.com/recipes/${id}/analyzedInstructions?apiKey=8d4c6012caa14184b35f48eb2e74d415`
+  //         );
+  //         const data = await res.json();
+  //         recipeSteps(data[0]);
+  //       } catch (err) {
+  //         console.error(err);
+  //       }
+  //     };
+  //     getInstructions();
+  //   }, [id]);
 
-  return (
-    <form
-      onSubmit={handleSubmit}
-      className={`${styles.form} ${className ? className : ""}`}
-    >
-      <div className={`${styles["search-bar"]} ${width ? width : ""}`}>
-        <input
-          placeholder="pasta"
-          id="input"
-          name="input"
-          type="text"
-          className={styles["input-field"]}
-          ref={inputRef}
-          onChange={() => setShowList(false)}
-        />
-        <button type="submit" className={styles["search-btn"]}>
-          <i className="fa-solid fa-magnifying-glass"></i>
-        </button>
-      </div>
-      {showList && (
-        <ul
-          className={styles["search-list"]}
-          onMouseLeave={() => setShowList(false)}
-        >
-          {queryResults.map((result) => (
-            <li key={result.id} className={styles["list-item"]}>
-              <button
-                className={styles.select}
-                onMouseEnter={() => setShowList(true)}
-                onClick={() => selectResultHandler(result.id)}
-              >
-                {result.title}
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
-    </form>
-    // <h1>Test Search bar</h1>
-  );
+  //   return (
+  //     <form
+  //       onSubmit={handleSubmit}
+  //       className={`${styles.form} ${className ? className : ""}`}
+  //     >
+  //       <div className={`${styles["search-bar"]} ${width ? width : ""}`}>
+  //         <input
+  //           placeholder="pasta"
+  //           id="input"
+  //           name="input"
+  //           type="text"
+  //           className={styles["input-field"]}
+  //           ref={inputRef}
+  //           onChange={() => setShowList(false)}
+  //         />
+  //         <button type="submit" className={styles["search-btn"]}>
+  //           <i className="fa-solid fa-magnifying-glass"></i>
+  //         </button>
+  //       </div>
+  //       {showList && (
+  //         <ul
+  //           className={styles["search-list"]}
+  //           onMouseLeave={() => setShowList(false)}
+  //         >
+  //           {queryResults.map((result) => (
+  //             <li key={result.id} className={styles["list-item"]}>
+  //               <button
+  //                 className={styles.select}
+  //                 onMouseEnter={() => setShowList(true)}
+  //                 onClick={() => selectResultHandler(result.id)}
+  //               >
+  //                 {result.title}
+  //               </button>
+  //             </li>
+  //           ))}
+  //         </ul>
+  //       )}
+  //     </form>
+  return <h1>Test Search bar</h1>;
+  // );
 };
 
 export default SearchBar;
