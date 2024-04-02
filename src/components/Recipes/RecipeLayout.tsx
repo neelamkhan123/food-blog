@@ -1,7 +1,7 @@
 import { useMyBookmarkContext } from "../../contexts/MyBookmarks";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBookmark } from "@fortawesome/free-solid-svg-icons";
-import { faHeart } from "@fortawesome/free-solid-svg-icons";
+import { faBookmark as solidBookmark } from "@fortawesome/free-solid-svg-icons";
+import { faBookmark as regularBookmark } from "@fortawesome/free-regular-svg-icons";
 
 import styles from "./Recipe.module.css";
 import { useEffect, useState } from "react";
@@ -43,12 +43,11 @@ const RecipeLayout = ({
   const [isBookmarked, setIsBookmarked] = useState(false);
 
   useEffect(() => {
-    bookmarks.map((bookmark: any) =>
-      bookmark.id === recipeId && bookmark.userId === userId
-        ? setIsBookmarked(true)
-        : setIsBookmarked(false)
+    const isRecipeBookmarked = bookmarks.some(
+      (bookmark) => bookmark.id === recipeId && bookmark.userId === userId
     );
-  }, [recipeId, userId, bookmarks, isBookmarked]);
+    setIsBookmarked(isRecipeBookmarked);
+  }, [bookmarks, recipeId, userId]);
 
   return (
     <main className={styles["recipe-container"]}>
@@ -93,43 +92,11 @@ const RecipeLayout = ({
             </ul>
           </div>
 
-          {/* <button
-            className={styles["bookmarks-container"]}
-            onClick={() => toggleBookmark(recipeBookmark)}
-          > */}
-          {/* {bookmarks.length === 0 ? (
-              <i className="fa-regular fa-bookmark"></i>
-            ) : bookmarks.map(
-                (bookmark: any) =>
-                  bookmark.id === recipeId && bookmark.userId === userId
-              ) ? (
-              <i className="fa-solid fa-bookmark"></i>
-            ) : (
-              <i className="fa-regular fa-bookmark"></i>
-            )} */}
-          {/* {bookmarks.includes(recipeBookmark) ? (
-              <i className="fa-solid fa-bookmark"></i>
-            ) : (
-              <i className="fa-regular fa-bookmark"></i>
-            )} */}
-          {/* </button> */}
           <FontAwesomeIcon
-            icon={isBookmarked ? faBookmark : faHeart}
+            icon={isBookmarked ? solidBookmark : regularBookmark}
             onClick={() => toggleBookmark(recipeBookmark)}
             className={styles["bookmarks-container"]}
           />
-          {/* <FontAwesomeIcon
-            icon={
-              bookmarks.map(
-                (bookmark: any, index) =>
-                  bookmark.id === recipeId && bookmark.userId === userId
-              )
-                ? faBookmark
-                : faHeart
-            }
-            onClick={() => toggleBookmark(recipeBookmark)}
-            className={styles["bookmarks-container"]}
-          /> */}
 
           <div className={styles["steps-container"]}>
             <ul className={styles["steps-list"]}>

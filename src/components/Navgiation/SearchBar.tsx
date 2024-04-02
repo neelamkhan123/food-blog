@@ -40,7 +40,6 @@ interface SearchBarProps {
   width: string;
 }
 
-// const SearchBar = (): JSX.Element => {
 const SearchBar = ({ className, width }: SearchBarProps): JSX.Element => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useState("");
@@ -124,33 +123,37 @@ const SearchBar = ({ className, width }: SearchBarProps): JSX.Element => {
   }, [query]);
 
   useEffect(() => {
-    const getRecipe = async () => {
-      try {
-        const res = await fetch(
-          `https://api.spoonacular.com/recipes/${id}/information?apiKey=8d4c6012caa14184b35f48eb2e74d415&includeNutrition=false`
-        );
-        const data = await res.json();
-        recipeInfo(data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    getRecipe();
+    if (id !== null && id !== undefined) {
+      const getRecipe = async () => {
+        try {
+          const res = await fetch(
+            `https://api.spoonacular.com/recipes/${id}/information?apiKey=8d4c6012caa14184b35f48eb2e74d415&includeNutrition=false`
+          );
+          const data = await res.json();
+          recipeInfo(data);
+        } catch (err) {
+          console.error(err);
+        }
+      };
+      getRecipe();
+    }
   }, [id]);
 
   useEffect(() => {
-    const getInstructions = async () => {
-      try {
-        const res = await fetch(
-          `https://api.spoonacular.com/recipes/${id}/analyzedInstructions?apiKey=8d4c6012caa14184b35f48eb2e74d415`
-        );
-        const data = await res.json();
-        recipeSteps(data[0]);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    getInstructions();
+    if (id !== null && id !== undefined) {
+      const getInstructions = async () => {
+        try {
+          const res = await fetch(
+            `https://api.spoonacular.com/recipes/${id}/analyzedInstructions?apiKey=8d4c6012caa14184b35f48eb2e74d415`
+          );
+          const data = await res.json();
+          recipeSteps(data[0]);
+        } catch (err) {
+          console.error(err);
+        }
+      };
+      getInstructions();
+    }
   }, [id]);
 
   return (
@@ -195,7 +198,6 @@ const SearchBar = ({ className, width }: SearchBarProps): JSX.Element => {
         </ul>
       )}
     </form>
-    // return <h1>Test Search bar</h1>;
   );
 };
 

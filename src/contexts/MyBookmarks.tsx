@@ -4,7 +4,6 @@ import {
   useContext,
   useState,
   useEffect,
-  SetStateAction,
 } from "react";
 
 type MyBookmark = {
@@ -75,13 +74,6 @@ export const MyBookmarksProvider = ({ children }: MyBookmarksProviderProps) => {
       setBookmarks([...bookmarks, bookmark]);
       setIsBookmarked(true);
     }
-
-    // // Check Bookmark State
-    // if (bookmarks.includes(bookmark)) {
-    //   setIsBookmarked(true);
-    // } else {
-    //   setIsBookmarked(false);
-    // }
   };
 
   // Delete Bookmark
