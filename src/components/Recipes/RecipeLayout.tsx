@@ -1,10 +1,14 @@
 import { useMyBookmarkContext } from "../../contexts/MyBookmarks";
-import { auth } from "../../firebase";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBookmark } from "@fortawesome/free-solid-svg-icons";
+import { faHeart } from "@fortawesome/free-solid-svg-icons";
 
 import styles from "./Recipe.module.css";
+import { useEffect, useState } from "react";
 
 type RecipeLayoutProps = {
-  recipeId: string;
+  userId: string;
+  recipeId: number;
   recipeTitle: string;
   recipeImage: string;
   recipeServings: number;
@@ -20,6 +24,7 @@ type RecipeLayoutProps = {
 };
 
 const RecipeLayout = ({
+  userId,
   recipeId,
   recipeTitle,
   recipeImage,
@@ -34,10 +39,16 @@ const RecipeLayout = ({
   recipeInstructions,
   recipeBookmark,
 }: RecipeLayoutProps): JSX.Element => {
-  const user = auth?.currentUser;
+  const { bookmarks, toggleBookmark } = useMyBookmarkContext();
+  const [isBookmarked, setIsBookmarked] = useState(false);
 
-  const { bookmarks, toggleBookmark, isBookmarked } = useMyBookmarkContext();
-  console.log(bookmarks);
+  useEffect(() => {
+    bookmarks.map((bookmark: any) =>
+      bookmark.id === recipeId && bookmark.userId === userId
+        ? setIsBookmarked(true)
+        : setIsBookmarked(false)
+    );
+  }, [recipeId, userId, bookmarks, isBookmarked]);
 
   return (
     <main className={styles["recipe-container"]}>
@@ -54,11 +65,13 @@ const RecipeLayout = ({
         <div className={styles["ingredients-container"]}>
           <h2 className={styles["ingredients-header"]}>ingredients</h2>
           <ul className={styles["ingredients-list"]}>
-            {recipeIngredients.map((ing: { original: string; id: string }) => (
-              <li key={ing.id} className={styles["ingredients-list-item"]}>
-                {ing.original}
-              </li>
-            ))}
+            {recipeIngredients.map(
+              (ing: { original: string; id: string }, index) => (
+                <li key={index} className={styles["ingredients-list-item"]}>
+                  {ing.original}
+                </li>
+              )
+            )}
           </ul>
         </div>
         <div className={styles["recipe-data-container"]}>
@@ -80,23 +93,49 @@ const RecipeLayout = ({
             </ul>
           </div>
 
-          <button
+          {/* <button
             className={styles["bookmarks-container"]}
             onClick={() => toggleBookmark(recipeBookmark)}
-          >
-            {isBookmarked ? (
+          > */}
+          {/* {bookmarks.length === 0 ? (
+              <i className="fa-regular fa-bookmark"></i>
+            ) : bookmarks.map(
+                (bookmark: any) =>
+                  bookmark.id === recipeId && bookmark.userId === userId
+              ) ? (
               <i className="fa-solid fa-bookmark"></i>
             ) : (
               <i className="fa-regular fa-bookmark"></i>
-            )}
-            {/* <i className="fa-regular fa-bookmark"></i> */}
-          </button>
+            )} */}
+          {/* {bookmarks.includes(recipeBookmark) ? (
+              <i className="fa-solid fa-bookmark"></i>
+            ) : (
+              <i className="fa-regular fa-bookmark"></i>
+            )} */}
+          {/* </button> */}
+          <FontAwesomeIcon
+            icon={isBookmarked ? faBookmark : faHeart}
+            onClick={() => toggleBookmark(recipeBookmark)}
+            className={styles["bookmarks-container"]}
+          />
+          {/* <FontAwesomeIcon
+            icon={
+              bookmarks.map(
+                (bookmark: any, index) =>
+                  bookmark.id === recipeId && bookmark.userId === userId
+              )
+                ? faBookmark
+                : faHeart
+            }
+            onClick={() => toggleBookmark(recipeBookmark)}
+            className={styles["bookmarks-container"]}
+          /> */}
 
           <div className={styles["steps-container"]}>
             <ul className={styles["steps-list"]}>
               {recipeInstructions.map(
-                (instr: { number: number; step: string }) => (
-                  <li key={instr.number} className={styles["steps-list-item"]}>
+                (instr: { number: number; step: string }, index) => (
+                  <li key={index} className={styles["steps-list-item"]}>
                     <h2 className={styles["step-heading"]}>
                       Step <span className={styles.count}>{instr.number}</span>
                     </h2>

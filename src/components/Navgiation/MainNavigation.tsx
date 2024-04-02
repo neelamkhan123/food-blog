@@ -50,9 +50,9 @@ const MainNavigation = (): JSX.Element => {
         {noUserAccess && (
           <main className={styles.main}>
             <Logo />
-            {/* {showNavSearchBar && (
+            {showNavSearchBar && (
               <SearchBar width={styles.width} className={styles.navbar} />
-            )} */}
+            )}
             <NavLink to="/login" className={styles["auth-icon"]}>
               <i className="fa-regular fa-user"></i>
             </NavLink>
@@ -61,9 +61,9 @@ const MainNavigation = (): JSX.Element => {
         {showUserAccess && (
           <main className={styles.main}>
             <Logo />
-            {/* {showNavSearchBar && (
+            {showNavSearchBar && (
               <SearchBar width={styles.width} className={styles.navbar} />
-            )} */}
+            )}
             <div className={styles["user-active"]}>
               <div className={styles["nav-router"]}>
                 <NavLink to="/explore" className={styles["auth-icon"]}>

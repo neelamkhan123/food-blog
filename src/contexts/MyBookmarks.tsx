@@ -4,12 +4,12 @@ import {
   useContext,
   useState,
   useEffect,
+  SetStateAction,
 } from "react";
 
-interface MyBookmark {
-  userId: string | null;
-  status: boolean;
-  id: string;
+type MyBookmark = {
+  userId: string | null | undefined;
+  id: number;
   title: string;
   image: string;
   servings: number;
@@ -27,7 +27,7 @@ interface MyBookmark {
     number: number;
     step: string;
   }[];
-}
+};
 
 type MyBookmarkContextType = {
   bookmarks: MyBookmark[];
@@ -46,53 +46,45 @@ type MyBookmarksProviderProps = {
 
 export const MyBookmarksProvider = ({ children }: MyBookmarksProviderProps) => {
   const [bookmarks, setBookmarks] = useState<MyBookmark[]>([]);
-
   const [isBookmarked, setIsBookmarked] = useState(false);
 
-  // useEffect(() => {
-  //   const savedBookmarks = JSON.parse(localStorage.getItem("bookmark") || "[]");
-  //   setBookmarks(savedBookmarks);
-  // }, []);
+  useEffect(() => {
+    const savedBookmarks = JSON.parse(
+      localStorage.getItem("bookmarks") || "[]"
+    );
+    setBookmarks(savedBookmarks);
+  }, []);
 
-  // useEffect(() => {
-  //   localStorage.setItem("bookmark", JSON.stringify(bookmarks));
-  // }, [bookmarks]);
+  useEffect(() => {
+    localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
+  }, [bookmarks]);
 
+  // Toggle Bookmark
   const toggleBookmark = (bookmark: MyBookmark) => {
-    setIsBookmarked((prevState) => !prevState);
-    isBookmarked
-      ? setBookmarks((prevBookmark) => [
-          {
-            userId: bookmark.userId,
-            status: bookmark.status,
-            id: bookmark.id,
-            title: bookmark.title,
-            image: bookmark.image,
-            servings: bookmark.servings,
-            readyInMinutes: bookmark.readyInMinutes,
-            dairyFree: bookmark.dairyFree,
-            glutenFree: bookmark.glutenFree,
-            ketogenic: bookmark.ketogenic,
-            vegan: bookmark.vegan,
-            vegetarian: bookmark.vegetarian,
-            extendedIngredients: bookmark.extendedIngredients.map(
-              (ing: { original: string; id: string }) => ({
-                original: ing.original,
-                id: ing.id,
-              })
-            ),
-            steps: bookmark.steps.map(
-              (inst: { number: number; step: string }) => ({
-                number: inst.number,
-                step: inst.step,
-              })
-            ),
-          },
-          ...prevBookmark,
-        ])
-      : bookmarks.pop();
+    const bookmarkIndex = bookmarks.findIndex((b) => b.id === bookmark.id);
+
+    if (bookmarkIndex !== -1) {
+      // Bookmark already exists, remove it
+      setBookmarks([
+        ...bookmarks.slice(0, bookmarkIndex),
+        ...bookmarks.slice(bookmarkIndex + 1),
+      ]);
+      setIsBookmarked(false);
+    } else {
+      // Bookmark doesn't exist, add it
+      setBookmarks([...bookmarks, bookmark]);
+      setIsBookmarked(true);
+    }
+
+    // // Check Bookmark State
+    // if (bookmarks.includes(bookmark)) {
+    //   setIsBookmarked(true);
+    // } else {
+    //   setIsBookmarked(false);
+    // }
   };
 
+  // Delete Bookmark
   const deleteBookmark = () => {
     console.log("delete bookmark");
   };

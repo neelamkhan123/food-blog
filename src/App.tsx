@@ -10,6 +10,8 @@ import BookmarkedRecipePage from "./pages/BookmarkedRecipePage";
 import MyAccountPage from "./pages/MyAccountPage";
 import PostFormPage from "./pages/PostFormPage";
 import ExplorePage from "./pages/ExplorePage";
+import ExploreRecipePage from "./pages/ExploreRecipePage";
+import MyRecipePage from "./pages/MyRecipePage";
 
 const router = createBrowserRouter([
   {
@@ -45,6 +47,10 @@ const router = createBrowserRouter([
         element: <MyAccountPage />,
       },
       {
+        path: "/my-recipe-page",
+        element: <MyRecipePage />,
+      },
+      {
         path: "/post-form",
         element: <PostFormPage />,
       },
@@ -52,6 +58,7 @@ const router = createBrowserRouter([
         path: "/explore",
         element: <ExplorePage />,
       },
+      { path: "/explore-recipe", element: <ExploreRecipePage /> },
     ],
   },
 ]);
