@@ -53,6 +53,7 @@
   "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
   "main": "index.js",
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "typescript-plugin-css-modules": "^5.0.1",
     "typings-for-css-modules-loader": "^1.7.0"
   },

@@ -23,7 +23,6 @@ const ExploreRecipe = (): JSX.Element => {
     })),
   };
 
-  // return <h2>Hello</h2>;
   return (
     <RecipeLayout
       userId={recipe.userId}
